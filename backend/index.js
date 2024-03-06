@@ -55,12 +55,11 @@ app.post("/register" , async(req , res) => {
 
 app.post('/login' , async (req , res) => {
     const {email , password} = req.body;
-    console.log(req.body);
     const userDoc = await UserModel.findOne({email});
     if(userDoc) {
         const passok = bcrypt.compareSync(password , userDoc.password);
         if(passok) {
-            jwt.sign({email:userDoc.email , id:userDoc._id} , jwtSecret , {} , (err , token) => {
+            jwt.sign({email:userDoc.email , id:userDoc._id, name: userDoc.name} , jwtSecret , {} , (err , token) => {
                 if(err) throw err;
                 res.cookie('token' , token).json(userDoc);
             })
@@ -70,7 +69,18 @@ app.post('/login' , async (req , res) => {
     else res.status(401).json('not found');
 });
 
-
+app.get('/profile' , (req , res) => {
+    const {token} = req.cookies;
+    if(token){
+        jwt.verify(token,jwtSecret, {}, async (err,user)=>{
+            if (err) throw err;
+            res.json(user);
+        })
+    }else{
+        res.json(null);
+    }
+    res.json({token});
+})
 app.listen(4000,()=>{
     console.log("Server is running");
 })

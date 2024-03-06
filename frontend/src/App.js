@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import Layout from './Layout';
 import Registerpage from './pages/Registerpage';
 import axios from 'axios';
+import { UserContextProvider } from './UserContext';
 
 axios.defaults.withCredentials = true;
 
@@ -13,7 +14,8 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <BrowserRouter>
+    <UserContextProvider>
+      <BrowserRouter>
         <Routes>
         <Route path = "/" element={<Layout/>}>
         <Route path='/' element={<IndexPage/>}/>
@@ -22,6 +24,7 @@ function App() {
         </Route> 
         </Routes>
       </BrowserRouter>
+    </UserContextProvider>
   )
 }
 

@@ -59,7 +59,7 @@ app.post('/login' , async (req , res) => {
     if(userDoc) {
         const passok = bcrypt.compareSync(password , userDoc.password);
         if(passok) {
-            jwt.sign({email:userDoc.email , id:userDoc._id, name: userDoc.name} , jwtSecret , {} , (err , token) => {
+            jwt.sign({email:userDoc.email , id:userDoc._id} , jwtSecret , {} , (err , token) => {
                 if(err) throw err;
                 res.cookie('token' , token).json(userDoc);
             })
@@ -72,14 +72,19 @@ app.post('/login' , async (req , res) => {
 app.get('/profile' , (req , res) => {
     const {token} = req.cookies;
     if(token){
-        jwt.verify(token,jwtSecret, {}, async (err,user)=>{
+        jwt.verify(token,jwtSecret, {}, async (err,userData)=>{
             if (err) throw err;
-            res.json(user);
+            const {name , email , id} = await UserModel.findById(userData.id);
+            res.json({name , email , id});
         })
     }else{
         res.json(null);
     }
-    res.json({token});
+    // res.json({token});
+})
+
+app.post('/logout' , (req , res) => {
+    res.cookie('token' , '').json(true);
 })
 app.listen(4000,()=>{
     console.log("Server is running");

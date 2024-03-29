@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+// import { image } from "image-downloader";
 
 export default function PhotosUploader() {
     const [photoLink, setPhotoLink] = useState('');
@@ -15,6 +16,11 @@ export default function PhotosUploader() {
           return [...prev, filename];
         });
         setPhotoLink("");
+        // const {data : filename} = await axios.post("http://localhost:4000/upload-by-link" , {link : photoLink});
+        // setAddedPhotos(prev => {
+        //   return [...prev , filename];
+        // });
+        // setPhotoLink('');
       }
     
       function uploadPhoto(ev) {
@@ -52,10 +58,16 @@ export default function PhotosUploader() {
             </div>
             <div className="mt-2 grid gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
 
-            {addedPhotos.length > 0 &&
+            {/* {addedPhotos.length > 0 &&
               addedPhotos.map((link, index) => (
                 <div className="h-32 flex" key={link}>
-                  <img key={index} src={`http://localhost:4000/uploads/${link}`} alt={`Image ${index}`} />
+                  <img key={index} src={'http://localhost:4000/uploads/' + link} alt="" />
+                </div>
+              ))} */}
+
+              {addedPhotos.length > 0 && addedPhotos.map(link => (
+                <div>
+                  <img src = {'https://localhost:4000/uploads' + link}></img>
                 </div>
               ))}
   

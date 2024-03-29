@@ -13,7 +13,8 @@ export default function Placespage() {
   const { action } = useParams();
 
   useEffect(() => {
-    axios.get("http://localhost:4000/places").then(({ data }) => {
+    axios.get("http://localhost:4000/user-places").then(({ data }) => {
+      console.log("This is the data ", data);
       setPlaces(data);
     });
 
@@ -65,7 +66,7 @@ export default function Placespage() {
             <Link to={'/account/places/' + place._id}key={index} className="flex cursor-pointer gap-4 bg-gray-200 p-4 rounded-2xl">
               <div className="w-20 h-32 bg-gray-300 grow shrink-0">
                 {place.photos.length > 0 && (
-                  <img src={place.photos[0]}></img>
+                  <img src={'http://localhost:4000/uploads/'+place.photos[0]} alt=""></img>
                 )} 
               </div> 
               <div className="grow-0 shrink">

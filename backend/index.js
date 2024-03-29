@@ -8,13 +8,15 @@ import "dotenv/config";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import imageDownloader from "image-downloader";
-import path from "path";
+import path, { resolve } from "path";
 import downloadImage from "./controller/image_controller.js";
 import multer from "multer";
 import fs from "fs";
+import Booking from './Models/Booking.js'
 
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import { rejects } from "assert";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -238,8 +240,41 @@ app.put('/places' , async (req , res) => {
 
 app.get('/places', async (req , res) => {
   res.json(await Place.find());
-})
+});
 
+app.post('/bookings' , async (req , res) => {
+  const {token} = req.cookies;
+  const userData = await getUserDataFromToken(token);
+  const {
+    place , checkIn , checkOut , 
+    numgerOfGuest , name , phone , price,
+  } = req.body;
+  // console.log(req.body);
+  Booking.create({
+    place , checkIn , checkOut , 
+    numgerOfGuest , name , phone , price,
+    user:userData.id,
+  }).then((doc) => {
+    res.json(doc);
+  }).catch((err) => {
+    throw err;
+  });
+});
+
+function getUserDataFromToken(token) { 
+  return new Promise((resolve , rejects) => {
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+      if(err) throw err;
+      resolve(userData);
+    });
+  })
+}
+app.get('/bookings' , async (req , res) => {
+  const {token} = req.cookies;
+  const userData = await getUserDataFromToken(token);
+  res.json(await Booking.find({user:userData.id}).populate('place'));
+});
+ 
 app.listen(4000, () => {
   console.log("Server is running");
 });

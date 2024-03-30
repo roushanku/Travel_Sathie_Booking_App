@@ -269,6 +269,7 @@ function getUserDataFromToken(token) {
     });
   })
 }
+
 app.get('/bookings' , async (req , res) => {
   const {token} = req.cookies;
   const userData = await getUserDataFromToken(token);

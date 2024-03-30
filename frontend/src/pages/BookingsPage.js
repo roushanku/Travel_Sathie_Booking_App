@@ -3,6 +3,9 @@ import AccountNav from "../AccountNav";
 import axios from "axios";
 import {differenceInCalendarDays, format} from "date-fns"
 import { Link } from "react-router-dom";
+// import React, { useState, useEffect } from 'react';
+
+
 
 export default function BookingsPage() {
     const [bookings , setBookings] = useState([]);
@@ -16,6 +19,7 @@ export default function BookingsPage() {
             <AccountNav/>
             <div>
                 {bookings?.length > 0 && bookings.map(booking => (
+
                     <Link to={`/account/bookings/${booking._id}`}className="flex gap-4 bg-gray-200 rounded-2xl overflow-hidden">
                         <div className="w-48">
                             <img src="https://pix8.agoda.net/hotelImages/47148746/0/ccdf7c3bf969c4af4395dcf20f726ecc.jpg?ce=0&s=1024x768" alt=""></img>
